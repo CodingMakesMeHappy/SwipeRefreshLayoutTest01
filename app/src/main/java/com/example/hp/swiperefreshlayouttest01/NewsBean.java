@@ -9,6 +9,6 @@ public class NewsBean {
     public String pic;
     public String subject;
     public String summary;
-    public String newContentUrl;
+    public String l;
 }
 
