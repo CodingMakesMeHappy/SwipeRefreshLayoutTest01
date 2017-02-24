@@ -6,9 +6,9 @@ package com.example.hp.swiperefreshlayouttest01;
 
 
 public class NewsBean {
-    public String newsIconUrl;
-    public String newsTitle;
-    public String newsContent;
+    public String pic;
+    public String subject;
+    public String summary;
     public String newContentUrl;
 }
 

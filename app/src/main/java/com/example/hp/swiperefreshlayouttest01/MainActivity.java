@@ -8,19 +8,15 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends Activity {
@@ -64,30 +60,46 @@ public class MainActivity extends Activity {
             };
 
     private List<NewsBean> getJsonData(String url) {
-        List<NewsBean> newsBeanList = new ArrayList<>();
+        String jsonString = null;
         try {
-            String jsonString = readStream(new URL(url).openStream());
-            JSONObject jsonObject;
-            NewsBean newsBean;
-            jsonObject = new JSONObject(jsonString);
-            JSONArray jsonArray = jsonObject.getJSONArray("data");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                jsonObject = jsonArray.getJSONObject(i);
-                newsBean = new NewsBean();
-                Gson gson = new Gson();
-           //     newsBean.newsIconUrl = gson.fromJson("pic",String.class);
-             //   newsBean.newsTitle = gson.fromJson("subject",String.class);
-                newsBean.newsIconUrl = jsonObject.getString("pic");
-                newsBean.newsTitle = jsonObject.getString("subject");
-                newsBean.newsContent = jsonObject.getString("summary");
-                newsBean.newContentUrl = jsonObject.getString("index");
-                indexList[i] = String.valueOf(jsonObject.getLong("index"));
-                newsBeanList.add(newsBean);
-            }
-        } catch (IOException | JSONException e) {
+            jsonString = readStream(new URL(url).openStream());
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        return newsBeanList;
+        Gson gson = new Gson();
+        JsonRes jsonRes = gson.fromJson(jsonString, JsonRes.class);
+
+        if (jsonRes.error_code == -1) {
+            return jsonRes.data;
+        } else {
+            Toast.makeText(MainActivity.this, "网络出现问题", Toast.LENGTH_LONG).show();
+            return null;
+        }
+
+//        List<NewsBean> newsBeanList = new ArrayList<>();
+//        try {
+//            String jsonString = readStream(new URL(url).openStream());
+//            JSONObject jsonObject;
+//            NewsBean newsBean;
+//            jsonObject = new JSONObject(jsonString);
+//            JSONArray jsonArray = jsonObject.getJSONArray("data");
+//            for (int i = 0; i < jsonArray.length(); i++) {
+//                jsonObject = jsonArray.getJSONObject(i);
+//                newsBean = new NewsBean();
+//                Gson gson = new Gson();
+//           //     newsBean.newsIconUrl = gson.fromJson("pic",String.class);
+//             //   newsBean.newsTitle = gson.fromJson("subject",String.class);
+//                newsBean.pic = jsonObject.getString("pic");
+//                newsBean.subject = jsonObject.getString("subject");
+//                newsBean.summary = jsonObject.getString("summary");
+//              //  newsBean.newContentUrl = jsonObject.getString("index");
+//                indexList[i] = String.valueOf(jsonObject.getLong("index"));
+//                newsBeanList.add(newsBean);
+//            }
+//        } catch (IOException | JSONException e) {
+//            e.printStackTrace();
+//        }
+//        return newsBeanList;
     }
 
     private String readStream(InputStream is) {

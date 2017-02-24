@@ -55,12 +55,12 @@ class NewsAdapter extends BaseAdapter {
         }
 
         viewHolder.icon.setImageResource(R.mipmap.ic_launcher);
-        String url = mList.get(position).newsIconUrl;
+        String url = mList.get(position).pic;
         //viewHolder.icon.setTag(url);
-        Glide.with(mContext).load(url).into(viewHolder.icon);
+        Glide.with(mContext).load(url).asBitmap().error(R.mipmap.ic_launcher).into(viewHolder.icon);
 
-        viewHolder.title.setText(mList.get(position).newsTitle);
-        viewHolder.content.setText(mList.get(position).newsContent);
+        viewHolder.title.setText(mList.get(position).subject);
+        viewHolder.content.setText(mList.get(position).summary);
         return convertView;
     }
 
